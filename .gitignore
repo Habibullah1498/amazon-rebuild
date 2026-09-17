@@ -1,0 +1,7 @@
+# Capture-hook bookkeeping (per-session counters + raw payload debug trail).
+# NOTE: .agent-logs/ is deliberately NOT ignored — the logs ship with the repo.
+.claude/state/
+
+node_modules/
+.env
+.env.local
