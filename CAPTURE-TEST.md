@@ -221,6 +221,12 @@ entry carries `source: reconstructed-from-transcript` and the log file carries
 `reconstructed: true` in its frontmatter plus a note explaining why. Nothing was tidied,
 summarised or dropped, and the truncated original is preserved in git history.
 
+**One artifact worth naming:** when capture resumed, the hook's counter still held the value it had
+when it died (`exchanges: 2`), so the first live entries after recovery are numbered 2 and 3 while
+the reconstructed ones run 1–12. The counter has since been synced so numbering continues from 13.
+Those duplicate numbers are left exactly as written rather than renumbered — they are a true record
+of what the hook did, and the timestamps order the log unambiguously.
+
 **The lesson worth keeping:** a logging hook that cannot fail loudly will fail silently. If this
 were rebuilt, the hook would write a heartbeat the session could verify against, so "no events
 for N turns" would itself be visible. A silent logger is indistinguishable from a working one
