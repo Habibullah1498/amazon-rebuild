@@ -20,7 +20,7 @@ Claude Code hooks — they fire on their own, with nothing to remember.
 
 **Config file changed:** [`.claude/settings.json`](.claude/settings.json)
 
-**Hook script:** [`.claude/hooks/capture.js`](.claude/hooks/capture.js) (Node, no dependencies)
+**Hook script:** [`.claude/hooks/capture.cjs`](.claude/hooks/capture.cjs) (Node, no dependencies)
 
 Four lifecycle events are wired to the same script, which dispatches on `hook_event_name`:
 
@@ -186,6 +186,45 @@ precedence rule:
 - At `Stop`, the transcript wins — it names the model that actually produced that response.
 - At `UserPromptSubmit`, the transcript still describes the *previous* turn, so a model recorded by
   `PostModelSwitch` wins instead. Otherwise a `/model` switch would be reported one turn late.
+
+### 4. The hook broke silently halfway through the build
+
+The worst failure of the session, and it was self-inflicted.
+
+Creating `package.json` with `"type": "module"` for the Vite app changed how node treats **every
+`.js` file in the project** — including `.claude/hooks/capture.cjs`, which is CommonJS and uses
+`require()`. From that moment every hook invocation died with:
+
+```
+ReferenceError: require is not defined in ES module scope
+```
+
+The hook is deliberately written so it can never break a turn: every operation is wrapped in
+try/catch and the process always exits 0. That is the right design for a logging hook, and it is
+exactly why this went unnoticed — there was no error in the session, no warning, no missing output.
+Capture simply stopped, and everything looked normal.
+
+It stopped at `2026-09-17T17:11:52Z`, moments after `package.json` was written. The entire build —
+the storefront, the blank-page bug, the photography work, the mobile fixes — went unrecorded.
+
+**How it was caught:** not by the hook, but by checking the logs before pushing them. The state
+file read `exchanges: 2` with a last prompt hours earlier, and `raw-events.jsonl` had only 10
+lines. Had nobody looked, a log covering two exchanges would have shipped as the record of a
+full day's work.
+
+**Fixed** by renaming the hook to `capture.cjs` (explicitly CommonJS, immune to the `type` field)
+and pointing `.claude/settings.json` at the new name.
+
+**Recovered** with `scripts/backfill-log.cjs`, which rebuilds the entries from Claude Code's own
+session transcript — the authoritative record, which never stopped being written. Every recovered
+entry carries `source: reconstructed-from-transcript` and the log file carries
+`reconstructed: true` in its frontmatter plus a note explaining why. Nothing was tidied,
+summarised or dropped, and the truncated original is preserved in git history.
+
+**The lesson worth keeping:** a logging hook that cannot fail loudly will fail silently. If this
+were rebuilt, the hook would write a heartbeat the session could verify against, so "no events
+for N turns" would itself be visible. A silent logger is indistinguishable from a working one
+right up until you need the logs.
 
 ## Known limitations
 
