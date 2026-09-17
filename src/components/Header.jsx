@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { CATEGORIES, PRODUCTS } from '../data/catalog';
 import { useStore, money } from '../store/StoreContext';
-import ProductArt from './ProductArt';
+import ProductImage from './ProductImage';
 
 function suggest(query) {
   const q = query.trim().toLowerCase();
@@ -127,7 +127,7 @@ export default function Header() {
                     className="flex items-center gap-3 rounded-md px-2 py-2"
                     style={{ background: i === cursor ? 'var(--bg-sunken)' : 'transparent' }}
                   >
-                    <ProductArt art={p.art} tint={p.tint} className="h-9 w-9 shrink-0" />
+                    <ProductImage id={p.id} alt="" className="h-9 w-9 shrink-0" sizes="36px" />
                     <span className="min-w-0 flex-1 truncate text-sm" style={{ color: 'var(--fg-body)' }}>
                       {p.title}
                     </span>
@@ -172,15 +172,15 @@ export default function Header() {
       </div>
 
       <nav className="overflow-x-auto" style={{ background: 'var(--color-ink-800)' }}>
-        <ul className="mx-auto flex max-w-[1400px] items-center gap-1 px-3 py-1.5 text-sm whitespace-nowrap">
+        <ul className="mx-auto flex max-w-[1400px] items-center gap-1 px-3 py-1 pr-8 text-sm whitespace-nowrap sm:py-1.5">
           <li>
-            <Link to="/s" className="block rounded px-3 py-1 text-white/80 hover:bg-white/10">
+            <Link to="/s" className="block rounded px-3 py-3 text-white/80 hover:bg-white/10 sm:py-1">
               All
             </Link>
           </li>
           {CATEGORIES.map((c) => (
             <li key={c.id}>
-              <Link to={`/s?cat=${c.id}`} className="block rounded px-3 py-1 text-white/80 hover:bg-white/10">
+              <Link to={`/s?cat=${c.id}`} className="block rounded px-3 py-3 text-white/80 hover:bg-white/10 sm:py-1">
                 {c.label}
               </Link>
             </li>

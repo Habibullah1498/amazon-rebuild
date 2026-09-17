@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { findProduct, PRODUCTS, categoryLabel } from '../data/catalog';
 import { useStore, money } from '../store/StoreContext';
-import ProductArt from '../components/ProductArt';
+import ProductImage from '../components/ProductImage';
 import ProductCard from '../components/ProductCard';
 import { Stars, Price, Badge, Button, Stock } from '../components/Bits';
 
@@ -74,7 +74,7 @@ export default function Product() {
 
       <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_320px]">
         <div className="surface flex items-center justify-center p-6">
-          <ProductArt art={product.art} tint={product.tint} className="h-full max-h-[420px] w-full" alt={product.title} />
+          <ProductImage id={product.id} alt={product.title} className="w-full" sizes="(max-width: 1024px) 90vw, 460px" eager />
         </div>
 
         <div>

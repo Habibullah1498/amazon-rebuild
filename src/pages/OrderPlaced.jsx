@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { useStore, money } from '../store/StoreContext';
-import ProductArt from '../components/ProductArt';
+import ProductImage from '../components/ProductImage';
 import { Button } from '../components/Bits';
 
 export default function OrderPlaced() {
@@ -46,7 +46,7 @@ export default function OrderPlaced() {
         <div className="mb-6 space-y-3 text-left">
           {order.items.map((item) => (
             <div key={`${item.id}-${item.variant}`} className="flex items-center gap-3">
-              <ProductArt art={item.art} tint={item.tint} className="h-12 w-12 shrink-0" />
+              <ProductImage id={item.id} alt={item.title} className="h-12 w-12 shrink-0" sizes="48px" />
               <span className="min-w-0 flex-1 text-sm" style={{ color: 'var(--fg-body)' }}>
                 <Link to={`/p/${item.id}`} className="hover:underline">
                   {item.title}

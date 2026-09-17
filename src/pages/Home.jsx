@@ -1,8 +1,11 @@
 import { Link } from 'react-router-dom';
 import { CATEGORIES, PRODUCTS } from '../data/catalog';
 import ProductCard from '../components/ProductCard';
-import ProductArt from '../components/ProductArt';
+import ProductImage from '../components/ProductImage';
 import { Button } from '../components/Bits';
+
+// One recognisable product per category, for the hero collage.
+const HERO_IDS = ['bz-1001', 'bz-2001', 'bz-3003', 'bz-4001', 'bz-1005', 'bz-6001'];
 
 function Rail({ title, subtitle, items, to }) {
   return (
@@ -63,12 +66,14 @@ export default function Home() {
             </div>
           </div>
           <div className="grid grid-cols-3 gap-3">
-            {['headphones', 'kettle', 'book', 'shoe', 'camera', 'chair'].map((art, i) => (
-              <ProductArt
-                key={art}
-                art={art}
-                tint={['#2f6f8f', '#b07d4a', '#3f5f8a', '#c25a3f', '#4a5568', '#4a5a6b'][i]}
-                className="h-full w-full"
+            {HERO_IDS.map((id, i) => (
+              <ProductImage
+                key={id}
+                id={id}
+                alt=""
+                className="w-full"
+                sizes="(max-width: 1024px) 30vw, 150px"
+                eager={i < 3}
               />
             ))}
           </div>
@@ -84,7 +89,7 @@ export default function Home() {
             const sample = PRODUCTS.find((p) => p.category === c.id);
             return (
               <Link key={c.id} to={`/s?cat=${c.id}`} className="surface flex flex-col items-center gap-2 p-4 hover:shadow-md">
-                <ProductArt art={sample?.art} tint={sample?.tint} className="h-16 w-16" />
+                <ProductImage id={sample?.id} alt="" className="h-16 w-16" sizes="64px" />
                 <span className="text-center text-sm font-medium" style={{ color: 'var(--fg-strong)' }}>
                   {c.label}
                 </span>

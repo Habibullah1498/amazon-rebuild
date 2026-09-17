@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useStore, money } from '../store/StoreContext';
 import { Summary } from './Cart';
 import { Button } from '../components/Bits';
-import ProductArt from '../components/ProductArt';
+import ProductImage from '../components/ProductImage';
 
 const DELIVERY = [
   { id: 'standard', label: 'Standard', detail: '3–5 days', cost: 0 },
@@ -94,8 +94,6 @@ export default function Checkout() {
         qty: l.qty,
         variant: l.variant,
         price: l.product.price,
-        art: l.product.art,
-        tint: l.product.tint,
       })),
       name: form.name,
       email: form.email,
@@ -198,7 +196,7 @@ export default function Checkout() {
             <ul className="space-y-3">
               {lines.map((l) => (
                 <li key={`${l.id}-${l.variant}`} className="flex items-center gap-3">
-                  <ProductArt art={l.product.art} tint={l.product.tint} className="h-12 w-12 shrink-0" />
+                  <ProductImage id={l.id} alt={l.product.title} className="h-12 w-12 shrink-0" sizes="48px" />
                   <span className="min-w-0 flex-1 text-sm" style={{ color: 'var(--fg-body)' }}>
                     {l.product.title}
                     {l.variant && <span style={{ color: 'var(--fg-muted)' }}> · {l.variant}</span>}

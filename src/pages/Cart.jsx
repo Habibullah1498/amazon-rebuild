@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useStore, money } from '../store/StoreContext';
-import ProductArt from '../components/ProductArt';
+import ProductImage from '../components/ProductImage';
 import { Button, Stars } from '../components/Bits';
 
 export function Summary({ subtotal, shipping, tax, total, itemCount, children }) {
@@ -73,7 +73,7 @@ export default function Cart() {
           {lines.map((line) => (
             <article key={`${line.id}-${line.variant}`} className="surface flex flex-col gap-4 p-4 sm:flex-row">
               <Link to={`/p/${line.id}`} className="shrink-0 self-center">
-                <ProductArt art={line.product.art} tint={line.product.tint} className="h-28 w-28" />
+                <ProductImage id={line.id} alt={line.product.title} className="h-28 w-28" sizes="112px" />
               </Link>
 
               <div className="min-w-0 flex-1">
@@ -149,7 +149,7 @@ export default function Cart() {
               <div className="space-y-3">
                 {savedLines.map((line) => (
                   <article key={`s-${line.id}-${line.variant}`} className="surface flex items-center gap-4 p-3">
-                    <ProductArt art={line.product.art} tint={line.product.tint} className="h-16 w-16 shrink-0" />
+                    <ProductImage id={line.id} alt={line.product.title} className="h-16 w-16 shrink-0" sizes="64px" />
                     <div className="min-w-0 flex-1">
                       <Link to={`/p/${line.id}`} className="text-sm font-medium hover:underline" style={{ color: 'var(--fg-strong)' }}>
                         {line.product.title}

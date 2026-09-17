@@ -56,9 +56,12 @@ the buying loop had to be complete and good rather than broad and thin.
 - **React + Vite**, no UI framework. ~72 KB gzipped for the whole app.
 - **HashRouter**, because this deploys as static files to GitHub Pages where deep links would
   otherwise 404 without server rewrites.
-- **Product imagery is drawn, not fetched.** 25 hand-written SVG illustrations, tinted per product.
-  Stock photography for an invented catalogue means either broken hotlinks or photos that don't
-  match the listing; vector art stays coherent, works offline and adds no network weight.
+- **Real product photography**, served from the Unsplash CDN with `srcset` at 300/600/900w in
+  WebP. Each photo is resolved by `scripts/fetch-images.cjs`, which *searches Unsplash for the
+  product* rather than hard-coding photo IDs — hard-coding is how a landscape shot ends up on a
+  headphones card. Every card reserves a square box so mixed source ratios can't shift the layout
+  while loading, images below the fold are lazy, and a failed load falls back to a tile tinted with
+  the product's accent colour instead of a broken-image icon.
 - **Filter state lives in the URL**, so a filtered view is shareable and the back button steps
   back through refinements instead of leaving the page.
 - **Light and dark themes** driven entirely by CSS custom properties, so no component carries
@@ -72,6 +75,8 @@ the buying loop had to be complete and good rather than broad and thin.
 npm run smoke   # server-renders all 14 routes + all 30 product pages
 npm run flow    # drives the buying loop in a real browser, asserting on the money
 npm run shots   # screenshots key routes at desktop and mobile widths
+npm run mobile  # hunts horizontal overflow and undersized tap targets at 320/390px
+npm run sheet   # contact sheet of all 30 photos beside their titles, to eyeball matches
 ```
 
 `npm run flow` is the one that matters. It searches, opens a product, sets a quantity, adds to

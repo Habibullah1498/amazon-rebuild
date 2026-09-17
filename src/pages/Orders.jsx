@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useStore, money } from '../store/StoreContext';
-import ProductArt from '../components/ProductArt';
+import ProductImage from '../components/ProductImage';
 import { Button } from '../components/Bits';
 
 function stage(placedAt, delivery) {
@@ -79,7 +79,7 @@ export default function Orders() {
                 <div className="space-y-3">
                   {order.items.map((item) => (
                     <div key={`${item.id}-${item.variant}`} className="flex items-center gap-3">
-                      <ProductArt art={item.art} tint={item.tint} className="h-14 w-14 shrink-0" />
+                      <ProductImage id={item.id} alt={item.title} className="h-14 w-14 shrink-0" sizes="56px" />
                       <div className="min-w-0 flex-1">
                         <Link to={`/p/${item.id}`} className="text-sm font-medium hover:underline" style={{ color: 'var(--fg-strong)' }}>
                           {item.title}
