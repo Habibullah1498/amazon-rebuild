@@ -132,7 +132,9 @@ export default function Product() {
         </div>
 
         <aside className="lg:sticky lg:top-32 lg:self-start">
-          <div className="surface space-y-4 p-5">
+          {/* flex-col, not space-y: Price, Stock and Badge render as inline spans,
+              which space-y's block-child margins would skip entirely. */}
+          <div className="surface flex flex-col items-start gap-4 p-5">
             <Price value={product.price} list={product.listPrice} size="lg" />
             <Stock count={product.stock} days={product.deliveryDays} />
 

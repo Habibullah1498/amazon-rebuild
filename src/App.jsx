@@ -11,7 +11,12 @@ import OrderPlaced from './pages/OrderPlaced';
 
 function ScrollToTop() {
   const { pathname, search } = useLocation();
-  useEffect(() => window.scrollTo(0, 0), [pathname, search]);
+  // Block body, not an implicit return: handing React the return value of
+  // scrollTo makes it treat that as a cleanup function and throw on the next
+  // navigation, which unmounts the whole tree.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname, search]);
   return null;
 }
 

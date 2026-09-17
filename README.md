@@ -66,14 +66,33 @@ the buying loop had to be complete and good rather than broad and thin.
 - Respects `prefers-reduced-motion`, ships a skip link, uses visible focus rings, and keeps a
   16px gutter down to 400px width.
 
+## How it was verified
+
+```bash
+npm run smoke   # server-renders all 14 routes + all 30 product pages
+npm run flow    # drives the buying loop in a real browser, asserting on the money
+npm run shots   # screenshots key routes at desktop and mobile widths
+```
+
+`npm run flow` is the one that matters. It searches, opens a product, sets a quantity, adds to
+cart, checks the subtotal, shipping, tax and total arithmetic, submits an empty checkout to prove
+validation blocks it, fills the form, places the order, and confirms the order reaches history and
+survives a reload.
+
+The smoke test alone was not enough, and there's a good example of why in the history: an effect
+written as `useEffect(() => window.scrollTo(0, 0), deps)` handed React the return value of
+`scrollTo` as a cleanup function. React called it on the next navigation, threw, and unmounted the
+whole app — a blank page. Server rendering never runs effects, so the smoke test passed happily
+while the real site was broken. It took a headless browser to catch it.
+
 ## Honest limitations
 
-- **I could not click through this in a browser.** The environment it was built in has no browser
-  automation, so verification is the route-level smoke test (`npm run smoke`, which server-renders
-  all 14 routes plus all 30 product pages) and a production build served over HTTP with assets
-  confirmed resolving. Visual and interaction testing needs a human.
 - The catalogue is a seeded file, not a database. There is no backend.
 - Checkout takes no payment. The card field accepts any digits and nothing leaves the browser.
+- Sign-in is not implemented, so "your orders" means orders in this browser's local storage.
+- The reference product was rebuilt from working knowledge of its flows, not from a fresh
+  walkthrough of the live site — the build environment had no signed-in browser session to explore
+  with.
 
 ## Agent logs
 
